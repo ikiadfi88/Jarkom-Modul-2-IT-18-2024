@@ -94,22 +94,22 @@ Untuk membantu pertempuran di Erangel, kamu ditugaskan untuk membuat jaringan ko
      ```
 
    - Konfigurasi di Node Lipovka
-    ```
-    auto eth0
-    iface eth0 inet static
-    address 192.242.2.4
-    netmask 255.255.255.0
-    gateway 192.242.2.1
-    ```
+     ```
+     auto eth0
+     iface eth0 inet static
+     address 192.242.2.4
+     netmask 255.255.255.0
+     gateway 192.242.2.1
+     ```
 
    - Konfigurasi di Node Mylta
-    ```
-    auto eth0
-    iface eth0 inet static
-    address 192.242.2.5
-    netmask 255.255.255.0
-    gateway 192.242.2.1
-    ```
+     ```
+     auto eth0
+     iface eth0 inet static
+     address 192.242.2.5
+     netmask 255.255.255.0
+     gateway 192.242.2.1
+     ```
 
 2. Menjalankan command di bawah ini pada node Erangel
    ```
@@ -473,7 +473,7 @@ Testing menggunakan command di bawah ini di salah satu domain pada client GatkaT
 ping redzone.it18.com -c 5
 ```
 
-Jika berhasil menampilkan IP nya , maka berarti client bisa mengakses domain tersebut walaupun DNS master nya mati, artinya Georgopol sebagai DNS Slave telah berjalan dan berhasil
+Jika berhasil menampilkan IP nya , maka berarti client bisa mengakses domain tersebut walaupun DNS master nya mati, artinya Georgopol sebagai DNS Slave telah berjalan dan berhasil.
 
 **HASIL**
 
@@ -492,4 +492,168 @@ Jika berhasil menampilkan IP nya , maka berarti client bisa mengakses domain ter
 Kamu juga diperintahkan untuk membuat subdomain khusus melacak airdrop berisi peralatan medis dengan subdomain medkit.airdrop.xxxx.com yang mengarah ke Lipovka
 
 **CARA PENGERJAAN**
+1. Tambahkan subdomain medkit.airdrop.it18.com pada domain airdrop.it18.com yang mengarah ke lipovka. Pada pengerjaan ini saya membuka web console pada Pochinki, lalu menggunakan script bash soal.sh. Gunakan command `nano soal8.sh`, lalu masukkan kode bash di bawah ini.
+
+```bash
+cat <<EOL >/etc/bind/jarkom/airdrop.it18.com
+;
+; BIND data file for local loopback interface
+;
+\$TTL    604800
+@       IN      SOA     airdrop.it18.com. airdrop.it18.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      airdrop.it18.com.
+@       IN      A       192.242.2.2     ; IP Stalber
+www     IN      CNAME   airdrop.it18.com.
+medkit  IN      A       192.242.2.4     ; IP Lipovka
+@       IN      AAAA    ::1
+EOL
+
+service bind9 restart
+```
+
+2. Ketik command `chmod +x soal8.sh` dan run dengan `./soal8.sh`
+
+**TESTING**
+
+Testing menggunakan command di bawah ini pada client GatkaTrenches dan GatkaRadio
+
+```
+ping medkit.airdrop.it18.com -c 5
+```
+
+**HASIL**
+
+- GatkaTrenches
+
+(GAMBAR)
+
+- GatkaRadio
+
+(GAMBAR)
+
+---
+
+### **SOAL 9**
+
+Terkadang red zone yang pada umumnya di bombardir artileri akan dijatuhi bom oleh pesawat tempur. Untuk melindungi warga, kita diperlukan untuk membuat sistem peringatan air raid dan memasukkannya ke subdomain siren.redzone.xxxx.com dalam folder siren dan pastikan dapat diakses secara mudah dengan menambahkan alias www.siren.redzone.xxxx.com dan mendelegasikan subdomain tersebut ke Georgopol dengan alamat IP menuju radar di Severny
+
+**CARA PENGERJAAN**
+1. Tambahkan subdomain siren.redzone.it18.com pada pada server Pochinki /etc/bind/jarkom/redzone.it18.com .Pada pengerjaan ini saya membuka web console pada Pochinki, lalu menggunakan script bash soal.sh. Gunakan command `nano soal9pochink.sh`, lalu masukkan kode bash di bawah ini.
+
+```bash
+#!/bin/bash
+
+cat >> /etc/bind/jarkom/redzone.it18.com <<EOL
+\$TTL    604800
+@       IN      SOA     redzone.it18.com. redzone.it18.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      redzone.it18.com.
+@       IN      A       192.242.1.2     ; IP Pochinki
+www     IN      CNAME   redzone.it18.com.
+@       IN      A       192.242.2.3     ; IP Severny
+2.242.192.in-addr.arpa IN NS redzone.it18.com.
+3       IN      PTR     redzone.it18.com.
+siren   IN      A       192.242.1.5     ; IP Georgopol
+ns1     IN      A       192.242.1.5     ; IP Georgopol
+log     IN      NS      ns1
+@       IN      AAAA    ::1
+EOL
+
+# Restart server
+service bind9 restart
+```
+
+2. Ketik command `chmod +x soal9pochink.sh` dan jalankan dengan `./soal9pochink.sh`
+
+3. Buka `named.conf.options` dengan command `/etc/bind/named.conf.options` pada Pochinki. Kemudian comment dnssec-validation auto; dan tambahkan baris berikut pada /etc/bind/named.conf.options. `  allow-query{any;};`
+
+4. Setelah itu restart Pochinki dengan command `service bind9 restart`
+
+5. Pada server Georgopol juga tambahkan subdomain siren.redzone.it18.com pada config local Georgopol. Setelah itu buat folder delegasi baru dan konfigurasikan seperti file soal9georgopol.sh. Gunakan command `nano soal9georgopol.sh`, lalu masukkan kode bash di bawah ini.
+
+```bash
+#!/bin/bash
+
+# Update package lists and install BIND9
+apt-get update
+apt-get install bind9 -y
+
+# Add zone configuration to named.conf.local
+cat <<EOL >> /etc/bind/named.conf.local
+zone "siren.redzone.it18.com" {
+    type master;
+    file "/etc/bind/delegasi/siren.redzone.it18.com";
+};
+EOL
+
+# Create directory for zone files
+mkdir -p /etc/bind/delegasi/
+
+# Copy db.local to siren.redzone.it18.com
+cp /etc/bind/db.local /etc/bind/delegasi/siren.redzone.it18.com
+
+# Create zone file for siren.redzone.it18.com
+cat <<EOL > /etc/bind/delegasi/siren.redzone.it18.com
+\$TTL 604800
+@       IN      SOA     siren.redzone.it18.com. root.siren.redzone.it18.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+@       IN      NS      siren.redzone.it18.com.
+@       IN      A       192.242.1.5
+log     IN      A       192.242.1.5
+EOL
+
+# Restart BIND to apply changes
+service bind9 restart
+```
+
+6. Ketik command `chmod +x soal9georgopol.sh` dan run dengan `./soal9georgopol.sh`
+
+7. Sama seperti sebelumnya, buka `named.conf.options` dengan command `/etc/bind/named.conf.options` pada Georgopol. Kemudian comment dnssec-validation auto; dan tambahkan baris berikut pada /etc/bind/named.conf.options. `  allow-query{any;};`
+
+8. Setelah itu restart Georgopol dengan command `service bind9 restart`
+
+**TESTING**
+
+Testing menggunakan command di bawah ini pada client GatkaTrenches dan GatkaRadio
+
+```
+ping siren.redzone.it18.com -c 5
+```
+
+**HASIL**
+
+- GatkaTrenches
+
+(GAMBAR)
+
+- GatkaRadio
+
+(GAMBAR)
+
+---
+
+### **SOAL 10**
+
+Markas juga meminta catatan kapan saja pesawat tempur tersebut menjatuhkan bom, maka buatlah subdomain baru di subdomain siren yaitu log.siren.redzone.xxxx.com serta aliasnya www.log.siren.redzone.xxxx.com yang juga mengarah ke Severny
+
+**CARA PENGERJAAN**
+1. Tambahkan subdomain log.siren.redzone.it18.com pada pada server Pochinki /etc/bind/jarkom/redzone.it18.com .Pada pengerjaan ini saya membuka web console pada Pochinki, lalu menggunakan script bash soal.sh. Gunakan command `nano soal9pochink.sh`, lalu masukkan kode bash di bawah ini.
+
+
+
 
