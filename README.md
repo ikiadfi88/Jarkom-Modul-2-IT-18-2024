@@ -655,5 +655,249 @@ Markas juga meminta catatan kapan saja pesawat tempur tersebut menjatuhkan bom, 
 1. Tambahkan subdomain log.siren.redzone.it18.com pada pada server Pochinki /etc/bind/jarkom/redzone.it18.com .Pada pengerjaan ini saya membuka web console pada Pochinki, lalu menggunakan script bash soal.sh. Gunakan command `nano soal9pochink.sh`, lalu masukkan kode bash di bawah ini.
 
 
+---
+
+### **SOAL 11**
+
+Setelah pertempuran mereda, warga Erangel dapat kembali mengakses jaringan luar, tetapi hanya warga Pochinki saja yang dapat mengakses jaringan luar secara langsung. Buatlah konfigurasi agar warga Erangel yang berada diluar Pochinki dapat mengakses jaringan luar melalui DNS Server Pochinki
+
+**CARA PENGERJAAN**
+
+1. 
+
+**TESTING**
 
 
+**HASIL**
+
+(GAMBAR)
+
+---
+
+### **SOAL 12**
+
+Karena pusat ingin sebuah website yang ingin digunakan untuk memantau kondisi markas lainnya maka deploy lah website ini (cek resource yang lb) pada severny menggunakan apache
+
+**CARA PENGERJAAN**
+
+1. 
+
+**TESTING**
+
+
+**HASIL**
+
+(GAMBAR)
+
+---
+
+### **SOAL 13**
+
+Tapi pusat merasa tidak puas dengan performanya karena traffic yang tinggi maka pusat meminta kita memasang load balancer pada web nya, dengan Severny, Stalber, Lipovka sebagai worker dan Mylta sebagai Load Balancer menggunakan apache sebagai web server nya dan load balancernya
+
+**CARA PENGERJAAN**
+
+1. 
+
+**TESTING**
+
+
+**HASIL**
+
+(GAMBAR)
+
+---
+
+### **SOAL 14**
+
+Mereka juga belum merasa puas jadi pusat meminta agar web servernya dan load balancer nya diubah menjadi nginx
+
+**CARA PENGERJAAN**
+
+1. Stop service apache yang sebelumnya berjalan di web server dan load balancer 
+2. Lakukan install Nginx 
+
+    ```
+    apt-get update
+    apt-get install nginx
+    ```
+
+3. Untuk pengecekan bisa dengan ```service nginx status```
+4. Selanjutnya input konfigurasi
+  ```
+  http {
+    upstream jarkom_backend {
+        zone upstream;
+        server 192.242.2.3; # IP Severny
+        server 192.242.2.2; # IP Stalber
+    }
+}
+
+server {
+    listen 80;
+    name_server myIta.it18.com www.myIta.it18.com;
+
+    location / {
+        proxy_pass http://jarkom_backend;
+    }
+}
+  ```
+5. Dan lakukan simlink file di sites-available dengan sites-enabled
+  ```
+  " > /etc/nginx/sites-available/jarkom
+
+  ln -s /etc/nginx/sites-available/jarkom /etc/nginx/sites-enabled/jarkom
+  ```
+6. Selanjutnya, hapus default agar tidak menabrak konfigurasi yang sudah dibuat sebelumnya
+  ```
+  rm /etc/nginx/sites-enabled/default
+  ```
+7. Lalu kita bisa restart kembali Nginx ```service nginx restart``` 
+
+8. Untuk severny, stalber, dan lipovka lakukan kembali step 1 dan 2
+9. Install ```apt install php php-fpm php-mysql -y```
+10. Selanjutnya buat folder untuk jarkom
+  ```
+  mkdir /var/www/jarkom
+  cp /root/lb/worker/index.php /var/www/jarkom/index.php
+  ```
+11. Jalankan ```service php7.2-fpm``` = ```service php7.0-fpm start```
+12. Selanjutnya input konfigurasi ke dalam ```/etc/nginx/sites-available/jarkom```
+  ```
+  echo -e "server {
+        listen 80;
+
+        root /var/www/jarkom;
+        index index.php index.html index.htm index.nginx-debian.html;
+
+        name-server;
+
+        location / {
+                try_files $uri $uri/ /index.php?$query_string;
+        }
+
+        location ~ \.php$ {
+                include snippets/fastcgi-php.conf;
+                fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+        }
+
+        location ~ /\.ht {
+                deny all;
+        }
+          }" > /etc/nginx/sites-available/jarkom
+  ```
+13. Seperti step 5, 6 dan 7, lakukan simlink file, delete file default dan restart Nginx 
+  ```
+  ln -s /etc/nginx/sites-available/jarkom /etc/nginx/sites-enabled/jarkom
+
+  rm /etc/nginx/sites-enabled/default
+
+  service nginx restart
+  ```
+14. Lakukan konfigurasi ini pada semua worker
+
+---
+
+### **SOAL 15**
+
+Markas pusat meminta laporan hasil benchmark dengan menggunakan apache benchmark dari load balancer dengan 2 web server yang berbeda tersebut dan meminta secara detail dengan ketentuan:
+- Nama Algoritma Load Balancer
+- Report hasil testing apache benchmark 
+- Grafik request per second untuk masing masing algoritma. 
+- Analisis
+
+**CARA PENGERJAAN**
+
+1. 
+
+**TESTING**
+
+
+**HASIL**
+
+(GAMBAR)
+
+---
+
+### **SOAL 16**
+
+Karena dirasa kurang aman karena masih memakai IP, markas ingin akses ke mylta memakai mylta.xxx.com dengan alias www.mylta.xxx.com (sesuai web server terbaik hasil analisis kalian)
+
+**CARA PENGERJAAN**
+
+1. 
+
+**TESTING**
+
+
+**HASIL**
+
+(GAMBAR)
+
+---
+
+### **SOAL 17**
+
+Agar aman, buatlah konfigurasi agar mylta.xxx.com hanya dapat diakses melalui port 14000 dan 14400
+
+**CARA PENGERJAAN**
+
+1. 
+
+**TESTING**
+
+
+**HASIL**
+
+(GAMBAR)
+
+---
+
+### **SOAL 18**
+
+Apa bila ada yang mencoba mengakses IP mylta akan secara otomatis dialihkan ke www.mylta.xxx.com
+
+**CARA PENGERJAAN**
+
+1. 
+
+**TESTING**
+
+
+**HASIL**
+
+(GAMBAR)
+
+---
+
+### **SOAL 19**
+
+Karena probset sudah kehabisan ide masuk ke salah satu worker buatkan akses direktori listing yang mengarah ke resource worker2
+
+**CARA PENGERJAAN**
+
+1. 
+
+**TESTING**
+
+
+**HASIL**
+
+(GAMBAR)
+
+---
+
+### **SOAL 20**
+
+Worker tersebut harus dapat di akses dengan tamat.xxx.com dengan alias www.tamat.xxx.com
+
+**CARA PENGERJAAN**
+
+1. 
+
+**TESTING**
+
+
+**HASIL**
+
+(GAMBAR)
