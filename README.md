@@ -93,7 +93,7 @@ Untuk membantu pertempuran di Erangel, kamu ditugaskan untuk membuat jaringan ko
      gateway 192.242.2.1
      ```
 
-  - Konfigurasi di Node Lipovka
+   - Konfigurasi di Node Lipovka
     ```
     auto eth0
     iface eth0 inet static
@@ -102,7 +102,7 @@ Untuk membantu pertempuran di Erangel, kamu ditugaskan untuk membuat jaringan ko
     gateway 192.242.2.1
     ```
 
-  - Konfigurasi di Node Mylta
+   - Konfigurasi di Node Mylta
     ```
     auto eth0
     iface eth0 inet static
@@ -141,7 +141,7 @@ Karena para pasukan membutuhkan koordinasi untuk mengambil airdrop, maka buatlah
 
 **CARA PENGERJAAN**
 
-1. Pada pengerjaan ini saya menggunakan script bash soal2.sh. Gunakan command `nano soal2.sh`, lalu masukkan kode bash di bawah ini.
+1. Pada pengerjaan ini saya membuka web console pada Pochinki, lalu menggunakan script bash soal2.sh. Gunakan command `nano soal2.sh`, lalu masukkan kode bash di bawah ini. 
 
 ```bash
 #!/bin/bash
@@ -182,5 +182,314 @@ service bind9 restart
 ```
 2. Setelah itu ketik `chmod +x soal2.sh` dan run dengan `./soal2.sh`
 
+---
 
+### **SOAL 3**
+
+Para pasukan juga perlu mengetahui mana titik yang sedang di bombardir artileri, sehingga dibutuhkan domain lain yaitu redzone.xxxx.com dengan alias www.redzone.xxxx.com yang mengarah ke Severny
+
+**CARA PENGERJAAN**
+
+1. Pada pengerjaan ini saya membuka web console pada Pochinki, lalu menggunakan script bash soal3.sh. Gunakan command `nano soal3.sh`, lalu masukkan kode bash di bawah ini.
+
+```bash
+cat <<EOL >> /etc/bind/named.conf.local
+zone "redzone.it18.com" {
+    type master;
+    file "/etc/bind/jarkom/redzone.it18.com";
+};
+EOL
+
+cp /etc/bind/db.local /etc/bind/jarkom/redzone.it18.com
+
+cat <<EOL > /etc/bind/jarkom/redzone.it18.com
+;
+; BIND data file for local loopback interface
+;
+\$TTL    604800
+@       IN      SOA     redzone.it18.com. redzone.it18.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      redzone.it18.com.
+@       IN      A       192.242.2.3     ; IP Severny
+www     IN      CNAME   redzone.it18.com.
+EOL
+
+service bind9 restart
+```
+
+2. Setelah itu ketik `chmod +x soal3.sh` dan run dengan `./soal3.sh`
+
+---
+
+### **SOAL 4**
+
+Markas pusat meminta dibuatnya domain khusus untuk menaruh informasi persenjataan dan suplai yang tersebar. Informasi persenjataan dan suplai tersebut mengarah ke Mylta dan domain yang ingin digunakan adalah loot.xxxx.com dengan alias www.loot.xxxx.com
+
+**CARA PENGERJAAN**
+
+1. Pada pengerjaan ini saya membuka web console pada Pochinki, lalu menggunakan script bash soal4.sh. Gunakan command `nano soal4.sh`, lalu masukkan kode bash di bawah ini.
+
+```bash
+cat <<EOL >> /etc/bind/named.conf.local
+zone "loot.it18.com" {
+    type master;
+    file "/etc/bind/jarkom/loot.it18.com";
+};
+EOL
+
+cp /etc/bind/db.local /etc/bind/jarkom/loot.it18.com
+
+cat <<EOL > /etc/bind/jarkom/loot.it18.com
+;
+; BIND data file for local loopback interface
+;
+\$TTL    604800
+@       IN      SOA     loot.it18.com. loot.it18.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      loot.it18.com.
+@       IN      A       192.242.2.5     ; IP Mylta
+www     IN      CNAME   loot.it18.com.
+EOL
+
+service bind9 restart
+```
+
+2. Setelah itu ketik `chmod +x soal4.sh` dan run dengan `./soal4.sh`
+
+---
+
+### **SOAL 5**
+
+Pastikan domain-domain tersebut dapat diakses oleh seluruh komputer (client) yang berada di Erangel
+
+**CARA PENGERJAAN**
+
+1. Untuk memastikan agar client yaitu GatkaTrenches dan GatkaRadio dapat mengakses domain-domain di nomor 2-4, maka saya membuka web console ke GatkaTrenches dan GatkaRadio. Lalu dilakukan setup pada script bash dengan nama client.sh.  Gunakan command `nano client.sh`, lalu masukkan kode bash di bawah ini.
+
+```bash
+cat <<EOL > /etc/resolv.conf
+nameserver 192.242.1.2
+nameserver 192.242.1.5
+EOL
+```
+
+2. Setelah itu ketik `chmod +x client.sh` dan run dengan `./client.sh`
+
+**TESTING**
+
+Testing menggunakan command di bawah ini di GatkaTrenches dan GatkaRadio
+
+```
+ping airdrop.it18.com -c 5
+ping redzone.it18.com -c 5
+ping loot.it18.com -c 5
+```
+
+**HASIL**
+
+- GatkaTrenches
+
+(GAMBAR)
+
+- GatkaRadio
+
+(GAMBAR)
+
+---
+
+### **SOAL 6**
+
+Beberapa daerah memiliki keterbatasan yang menyebabkan hanya dapat mengakses domain secara langsung melalui alamat IP domain tersebut. Karena daerah tersebut tidak diketahui secara spesifik, pastikan semua komputer (client) dapat mengakses domain redzone.xxxx.com melalui alamat IP Severny (Notes : menggunakan pointer record)
+
+**CARA PENGERJAAN**
+
+1. Pada pengerjaan ini saya membuka web console pada Pochinki, lalu menggunakan script bash soal6.sh. Gunakan command `nano soal6.sh`, lalu masukkan kode bash di bawah ini. Pada kode ini saya menggunakan pointer record.
+
+```bash
+#!/bin/bash
+
+cat >> /etc/bind/named.conf.local <<EOL
+zone "2.242.192.in-addr.arpa" {
+    type master;
+    file "/etc/bind/jarkom/2.242.192.in-addr.arpa";
+};
+EOL
+
+cp /etc/bind/db.local /etc/bind/jarkom/2.242.192.in-addr.arpa
+
+cat >> /etc/bind/jarkom/2.242.192.in-addr.arpa <<EOL
+\$TTL    604800
+@       IN      SOA     redzone.it18.com. redzone.it18.com. (
+                        2024050301      ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      redzone.it18.com.
+@       IN      A       192.242.2.3     ; IP Severny
+www     IN      CNAME   redzone.it18.com.
+2.242.192.in-addr.arpa IN NS redzone.it18.com.
+3       IN      PTR     redzone.it18.com.
+EOL
+
+# Restart server
+service bind9 restart
+```
+
+2. Setelah itu ketik `chmod +x soal6.sh` dan run dengan `./soal6.sh`
+
+3. Setelah itu buka web console ke node client GatkaTrenches dan GatkaRadio, kemudian ketik command `nano /etc/resolv.conf`pada masing-masing node. Command nameserver Pochinki `192.242.1.2` dan Georgopol `192.242.1.2`, lalu tambahkan nameserver severny yaitu `192.242.2.3`
+
+(GAMBAR)
+
+**TESTING**
+
+Testing menggunakan command di bawah ini di GatkaTrenches dan GatkaRadio
+
+```
+ping redzone.it18.com -c 5
+```
+
+Jika muncul `ping: redzone.it18.com: Temporary failure in name resolution` , maka berarti client tidak bisa mengakses domain tersebut, selanjutnya tes menggunakan command di bawah ini
+
+```
+ping 192.242.2.3 -c 5
+```
+
+Jika memunculkan hasil ping, maka client sudah berhasil hanya bisa mengakses server Severny.
+
+**HASIL**
+
+- GatkaTrenches
+
+(GAMBAR)
+
+- GatkaRadio
+
+(GAMBAR)
+
+---
+
+### **SOAL 7**
+
+Akhir-akhir ini seringkali terjadi serangan siber ke DNS Server Utama, sebagai tindakan antisipasi kamu diperintahkan untuk membuat DNS Slave di Georgopol untuk semua domain yang sudah dibuat sebelumnya.
+
+**CARA PENGERJAAN**
+
+1. Pada pengerjaan ini saya membuka web console pada Pochinki, lalu menggunakan script bash soal7pochinki.sh. Gunakan command `nano soal7pochinki.sh`, lalu masukkan kode bash di bawah ini.
+
+```bash
+#!/bin/bash
+
+#Nomor 7
+cat <<EOL > /etc/bind/named.conf.local
+zone "airdrop.it18.com" {
+    type master;
+    notify yes;
+    also-notify { 192.242.1.5; }; //IP Georgopol
+    allow-transfer { 192.242.1.5; }; //IP Georgopol
+    file "/etc/bind/jarkom/airdrop.it18.com";
+};
+
+zone "redzone.it18.com" {
+    type master;
+    notify yes;
+    also-notify { 192.242.1.5; }; //IP Georgopol
+    allow-transfer { 192.242.1.5; }; //IP Georgopol
+    file "/etc/bind/jarkom/redzone.it18.com";
+};
+
+zone "loot.it18.com" {
+    type master;
+    notify yes;
+    also-notify { 192.242.1.5; }; //IP Georgopol
+    allow-transfer { 192.242.1.5; }; //IP Georgopol
+    file "/etc/bind/jarkom/loot.it18.com";
+};
+EOL
+
+service bind9 restart
+
+service bind9 stop
+```
+
+2. Ketik command `chmod +x soal7pochinki.sh` dan run dengan `./soal7pochinki.sh`
+   
+3. Setelah itu matikan server Pochinki sesuai dengan command di soal7pochinki.sh.
+
+4. kemudian setup node Georgopol, lalu menggunakan script bash soal7georgopol.sh. Gunakan command `nano soal7georgopol.sh`, lalu masukkan kode bash di bawah ini.
+
+```bash
+#!/bin/bash
+
+# Update package lists and install BIND9
+apt-get update
+apt-get install bind9 -y
+
+# Configure BIND9 zones
+cat <<EOL > /etc/bind/named.conf.local
+zone "airdrop.it18.com" {
+    type slave;
+    masters {192.242.1.2; };
+    file "/var/lib/bind/airdrop.it18.com";
+};
+
+zone "redzone.it18.com" {
+    type slave;
+    masters {192.242.1.2; };
+    file "/var/lib/bind/redzone.it18.com";
+};
+
+zone "loot.it18.com" {
+    type slave;
+    masters {192.242.1.2; };
+    file "/var/lib/bind/loot.it18.com";
+};
+EOL
+
+# Restart BIND9 service
+service bind9 restart
+
+```
+
+5. Ketik command `chmod +x soal7georgopol.sh` dan run dengan `./soal7georgopol.sh`
+
+**TESTING**
+
+Testing menggunakan command di bawah ini di salah satu domain pada client GatkaTrenches dan GatkaRadio
+
+```
+ping redzone.it18.com -c 5
+```
+
+Jika berhasil menampilkan IP nya , maka berarti client bisa mengakses domain tersebut walaupun DNS master nya mati, artinya Georgopol sebagai DNS Slave telah berjalan dan berhasil
+
+**HASIL**
+
+- GatkaTrenches
+
+(GAMBAR)
+
+- GatkaRadio
+
+(GAMBAR)
+
+---
+
+### **SOAL 8**
+
+Kamu juga diperintahkan untuk membuat subdomain khusus melacak airdrop berisi peralatan medis dengan subdomain medkit.airdrop.xxxx.com yang mengarah ke Lipovka
+
+**CARA PENGERJAAN**
 
