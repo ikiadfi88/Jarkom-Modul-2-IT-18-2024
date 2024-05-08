@@ -123,6 +123,7 @@ Untuk membantu pertempuran di Erangel, kamu ditugaskan untuk membuat jaringan ko
    ```
 
 **TESTING**
+
 Testing akses internet dengan contoh tujuan google.com pada seluruh node.
 ```
 ping google.com -c 5
