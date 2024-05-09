@@ -1078,14 +1078,39 @@ Karena dirasa kurang aman karena masih memakai IP, markas ingin akses ke mylta m
 
 **CARA PENGERJAAN**
 
-1. 
+1. Pada pengerjaan ini saya membuka web console pada **Pochinki**, lalu menggunakan script bash soal16.sh. Gunakan command `nano soal16.sh`, lalu masukkan kode bash di bawah ini.
+
+```bash
+#!/bin/bash
+
+cat <<EOL > /etc/bind/jarkom/mylta.it18.com
+\$TTL 604800
+@   IN SOA mylta.it18.com. root.mylta.it18.com. (
+                             2 ; Serial
+                        604800 ; Refresh
+                        86400  ; Retry
+                        2419200 ; Expire
+                        604800 ); Negative Cache TTL
+@   IN  NS  mylta.it18.com.
+@   IN  A   192.242.2.5
+www IN CNAME mylta.it18.com.
+EOL
+
+# Restart BIND to apply changes
+service bind9 restart
+
+```
+
+2. Setelah itu ketik `chmod +x soal16.sh` dan run dengan `./soal16.sh`
 
 **TESTING**
 
+Testing menggunakan command di bawah ini pada client **GatkaTrenches** dan **GatkaRadio**
 
-**HASIL**
-
-(GAMBAR)
+```
+ping mylta.it18.com -c 5
+ping www.mylta.it18.com -c 5
+```
 
 ---
 
@@ -1093,33 +1118,12 @@ Karena dirasa kurang aman karena masih memakai IP, markas ingin akses ke mylta m
 
 Agar aman, buatlah konfigurasi agar mylta.xxx.com hanya dapat diakses melalui port 14000 dan 14400
 
-**CARA PENGERJAAN**
-
-1. 
-
-**TESTING**
-
-
-**HASIL**
-
-(GAMBAR)
-
 ---
 
 ### **SOAL 18**
 
 Apa bila ada yang mencoba mengakses IP mylta akan secara otomatis dialihkan ke www.mylta.xxx.com
 
-**CARA PENGERJAAN**
-
-1. 
-
-**TESTING**
-
-
-**HASIL**
-
-(GAMBAR)
 
 ---
 
@@ -1127,30 +1131,8 @@ Apa bila ada yang mencoba mengakses IP mylta akan secara otomatis dialihkan ke w
 
 Karena probset sudah kehabisan ide masuk ke salah satu worker buatkan akses direktori listing yang mengarah ke resource worker2
 
-**CARA PENGERJAAN**
-
-1. 
-
-**TESTING**
-
-
-**HASIL**
-
-(GAMBAR)
-
 ---
 
 ### **SOAL 20**
 
 Worker tersebut harus dapat di akses dengan tamat.xxx.com dengan alias www.tamat.xxx.com
-
-**CARA PENGERJAAN**
-
-1. 
-
-**TESTING**
-
-
-**HASIL**
-
-(GAMBAR)
