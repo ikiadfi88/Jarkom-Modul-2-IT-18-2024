@@ -1069,18 +1069,7 @@ Markas pusat meminta laporan hasil benchmark dengan menggunakan apache benchmark
 - Report hasil testing apache benchmark 
 - Grafik request per second untuk masing masing algoritma. 
 - Analisis
-
-**CARA PENGERJAAN**
-
-1. 
-
-**TESTING**
-
-
-**HASIL**
-
-(GAMBAR)
-
+  
 ---
 
 ### **SOAL 16**
