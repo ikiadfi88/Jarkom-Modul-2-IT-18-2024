@@ -1,4 +1,4 @@
-# **LAPORAN RESMI PRAKTIKUM KOMUNIKASI DATA & JARINGAN KOMPUTER MODUL 2**
+![image](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/97d32664-1a6e-4bde-9260-3b9e024d952d)# **LAPORAN RESMI PRAKTIKUM KOMUNIKASI DATA & JARINGAN KOMPUTER MODUL 2**
 
 Berikut adalah Laporan Resmi Praktikum Komunikasi Data & Jaringan Komputer Modul 2 oleh Kelompok IT18.
 
@@ -117,7 +117,7 @@ Untuk membantu pertempuran di Erangel, kamu ditugaskan untuk membuat jaringan ko
    echo 'nameserver 192.168.122.1' > /etc/resolv.conf
    ```
 
-3. Menjalankan command di bawah ini untuk seluruh node agar dapat terkoneksi internet
+3. Pastikan enjalankan command di bawah ini untuk seluruh node server agar dapat terkoneksi internet
    ```
    echo 'nameserver 192.168.122.1' > /etc/resolv.conf
    ```
@@ -425,10 +425,8 @@ service bind9 stop
 ```
 
 2. Ketik command `chmod +x soal7pochinki.sh` dan run dengan `./soal7pochinki.sh`
-   
-3. Setelah itu matikan server Pochinki sesuai dengan command di soal7pochinki.sh.
 
-4. kemudian setup node Georgopol, lalu menggunakan script bash soal7georgopol.sh. Gunakan command `nano soal7georgopol.sh`, lalu masukkan kode bash di bawah ini.
+3. kemudian setup node Georgopol, lalu menggunakan script bash soal7georgopol.sh. Gunakan command `nano soal7georgopol.sh`, lalu masukkan kode bash di bawah ini.
 
 ```bash
 #!/bin/bash
@@ -463,14 +461,18 @@ service bind9 restart
 
 ```
 
-5. Ketik command `chmod +x soal7georgopol.sh` dan run dengan `./soal7georgopol.sh`
+4. Ketik command `chmod +x soal7georgopol.sh` dan run dengan `./soal7georgopol.sh`
+
+5. Untuk memastikan **Georgopol** bekerja sebagai DNS Slave, maka matikan server **Pochinki** menggunakan `service bind9 stop`
 
 **TESTING**
 
 Testing menggunakan command di bawah ini di salah satu domain pada client GatkaTrenches dan GatkaRadio
 
 ```
+ping airdrop.it18.com -c 5
 ping redzone.it18.com -c 5
+ping loot18.it18.com -c 5
 ```
 
 Jika berhasil menampilkan IP nya , maka berarti client bisa mengakses domain tersebut walaupun DNS master nya mati, artinya Georgopol sebagai DNS Slave telah berjalan dan berhasil.
@@ -492,7 +494,7 @@ Jika berhasil menampilkan IP nya , maka berarti client bisa mengakses domain ter
 Kamu juga diperintahkan untuk membuat subdomain khusus melacak airdrop berisi peralatan medis dengan subdomain medkit.airdrop.xxxx.com yang mengarah ke Lipovka
 
 **CARA PENGERJAAN**
-1. Tambahkan subdomain medkit.airdrop.it18.com pada domain airdrop.it18.com yang mengarah ke lipovka. Pada pengerjaan ini saya membuka web console pada Pochinki, lalu menggunakan script bash soal.sh. Gunakan command `nano soal8.sh`, lalu masukkan kode bash di bawah ini.
+1. Tambahkan subdomain medkit.airdrop.it18.com pada domain airdrop.it18.com yang mengarah ke Lipovka. Pada pengerjaan ini saya membuka web console pada **Pochinki**, lalu menggunakan script bash soal.sh. Gunakan command `nano soal8.sh`, lalu masukkan kode bash di bawah ini.
 
 ```bash
 cat <<EOL >/etc/bind/jarkom/airdrop.it18.com
@@ -521,7 +523,7 @@ service bind9 restart
 
 **TESTING**
 
-Testing menggunakan command di bawah ini pada client GatkaTrenches dan GatkaRadio
+Testing menggunakan command di bawah ini pada client **GatkaTrenches** dan **GatkaRadio**
 
 ```
 ping medkit.airdrop.it18.com -c 5
@@ -544,7 +546,7 @@ ping medkit.airdrop.it18.com -c 5
 Terkadang red zone yang pada umumnya di bombardir artileri akan dijatuhi bom oleh pesawat tempur. Untuk melindungi warga, kita diperlukan untuk membuat sistem peringatan air raid dan memasukkannya ke subdomain siren.redzone.xxxx.com dalam folder siren dan pastikan dapat diakses secara mudah dengan menambahkan alias www.siren.redzone.xxxx.com dan mendelegasikan subdomain tersebut ke Georgopol dengan alamat IP menuju radar di Severny
 
 **CARA PENGERJAAN**
-1. Tambahkan subdomain siren.redzone.it18.com pada pada server Pochinki /etc/bind/jarkom/redzone.it18.com .Pada pengerjaan ini saya membuka web console pada Pochinki, lalu menggunakan script bash soal.sh. Gunakan command `nano soal9pochink.sh`, lalu masukkan kode bash di bawah ini.
+1. Tambahkan subdomain siren.redzone.it18.com pada pada server **Pochinki** /etc/bind/jarkom/redzone.it18.com .Pada pengerjaan ini saya membuka web console pada Pochinki, lalu menggunakan script bash soal.sh. Gunakan command `nano soal9pochink.sh`, lalu masukkan kode bash di bawah ini.
 
 ```bash
 #!/bin/bash
@@ -564,10 +566,8 @@ www     IN      CNAME   redzone.it18.com.
 @       IN      A       192.242.2.3     ; IP Severny
 2.242.192.in-addr.arpa IN NS redzone.it18.com.
 3       IN      PTR     redzone.it18.com.
-siren   IN      A       192.242.1.5     ; IP Georgopol
 ns1     IN      A       192.242.1.5     ; IP Georgopol
-log     IN      NS      ns1
-@       IN      AAAA    ::1
+siren   IN      A       ns1'           
 EOL
 
 # Restart server
@@ -576,20 +576,15 @@ service bind9 restart
 
 2. Ketik command `chmod +x soal9pochink.sh` dan jalankan dengan `./soal9pochink.sh`
 
-3. Buka `named.conf.options` dengan command `/etc/bind/named.conf.options` pada Pochinki. Kemudian comment dnssec-validation auto; dan tambahkan baris berikut pada /etc/bind/named.conf.options. `  allow-query{any;};`
+3. Buka `named.conf.options` dengan command `/etc/bind/named.conf.options` pada **Pochinki**. Kemudian comment dnssec-validation auto; dan tambahkan baris berikut pada /etc/bind/named.conf.options. `  allow-query{any;};`
 
-4. Setelah itu restart Pochinki dengan command `service bind9 restart`
+4. Setelah itu restart **Pochinki** dengan command `service bind9 restart`
 
-5. Pada server Georgopol juga tambahkan subdomain siren.redzone.it18.com pada config local Georgopol. Setelah itu buat folder delegasi baru dan konfigurasikan seperti file soal9georgopol.sh. Gunakan command `nano soal9georgopol.sh`, lalu masukkan kode bash di bawah ini.
+5. Pada server **Georgopol** juga tambahkan subdomain siren.redzone.it18.com pada config local **Georgopol**. Setelah itu buat folder delegasi baru dan konfigurasikan seperti file soal9georgopol.sh. Gunakan command `nano soal9georgopol.sh`, lalu masukkan kode bash di bawah ini.
 
 ```bash
 #!/bin/bash
 
-# Update package lists and install BIND9
-apt-get update
-apt-get install bind9 -y
-
-# Add zone configuration to named.conf.local
 cat <<EOL >> /etc/bind/named.conf.local
 zone "siren.redzone.it18.com" {
     type master;
@@ -613,23 +608,24 @@ cat <<EOL > /etc/bind/delegasi/siren.redzone.it18.com
                         2419200         ; Expire
                          604800 )       ; Negative Cache TTL
 @       IN      NS      siren.redzone.it18.com.
-@       IN      A       192.242.1.5
-log     IN      A       192.242.1.5
+@       IN      A       192.242.2.3
+www     IN      CNAME   siren.redzone.it18.com.
 EOL
 
 # Restart BIND to apply changes
 service bind9 restart
+
 ```
 
 6. Ketik command `chmod +x soal9georgopol.sh` dan run dengan `./soal9georgopol.sh`
 
-7. Sama seperti sebelumnya, buka `named.conf.options` dengan command `/etc/bind/named.conf.options` pada Georgopol. Kemudian comment dnssec-validation auto; dan tambahkan baris berikut pada /etc/bind/named.conf.options. `  allow-query{any;};`
+7. Sama seperti sebelumnya, buka `named.conf.options` dengan command `/etc/bind/named.conf.options` pada **Georgopol**. Kemudian comment dnssec-validation auto; dan tambahkan baris berikut pada /etc/bind/named.conf.options. `  allow-query{any;};`
 
-8. Setelah itu restart Georgopol dengan command `service bind9 restart`
+8. Setelah itu restart **Georgopol** dengan command `service bind9 restart`
 
 **TESTING**
 
-Testing menggunakan command di bawah ini pada client GatkaTrenches dan GatkaRadio
+Testing menggunakan command di bawah ini pada client **GatkaTrenches** dan **GatkaRadio**
 
 ```
 ping siren.redzone.it18.com -c 5
@@ -652,8 +648,53 @@ ping siren.redzone.it18.com -c 5
 Markas juga meminta catatan kapan saja pesawat tempur tersebut menjatuhkan bom, maka buatlah subdomain baru di subdomain siren yaitu log.siren.redzone.xxxx.com serta aliasnya www.log.siren.redzone.xxxx.com yang juga mengarah ke Severny
 
 **CARA PENGERJAAN**
-1. Tambahkan subdomain log.siren.redzone.it18.com pada pada server Pochinki /etc/bind/jarkom/redzone.it18.com .Pada pengerjaan ini saya membuka web console pada Pochinki, lalu menggunakan script bash soal.sh. Gunakan command `nano soal9pochink.sh`, lalu masukkan kode bash di bawah ini.
+1. Tambahkan subdomain log.siren.redzone.it18.com pada pada server **Georgopol**.Pada pengerjaan ini saya membuka web console pada **Georgopol**, lalu menggunakan script bash soal10.sh. Gunakan command `nano soal10.sh`, lalu masukkan kode bash di bawah ini.
 
+```bash
+#!/bin/bash
+
+cat << EOL > /etc/bind/siren/siren.redzone.it18.com
+;
+; BIND data file for local loopback interface
+;
+\$TTL    604800
+@       IN      SOA     siren.redzone.it18.com. siren.redzone.it18.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      siren.redzone.it18.com.
+@       IN      A       192.242.2.3     ; IP Severny
+www     IN      CNAME   siren.redzone.it18.com.
+log     IN      A       192.242.2.3     ; IP Severny
+www.log IN      CNAME   siren.redzone.it18.com.
+EOL
+
+service bind9 restart
+
+```
+2. Ketik command `chmod +x soal10.sh` dan jalankan dengan `./soal10.sh`
+
+**TESTING**
+
+Testing menggunakan command di bawah ini pada client **GatkaTrenches** dan **GatkaRadio**
+
+```
+ping log.siren.redzone.it18.com -c 5
+ping www.log.siren.redzone.it18.com -c 5
+```
+
+**HASIL**
+
+- GatkaTrenches
+
+(GAMBAR)
+
+- GatkaRadio
+
+(GAMBAR)
 
 ---
 
@@ -663,12 +704,77 @@ Setelah pertempuran mereda, warga Erangel dapat kembali mengakses jaringan luar,
 
 **CARA PENGERJAAN**
 
-1. 
+1. Edit file menggunakan `nano /etc/bind/named.conf.options` pada server **Pochinki**
+
+2. Kemudian uncomment pada bagian ini dan tambahkan IP Erangel
+   
+```
+forwarders {
+      192.168.122.1; //IP Erangel
+};
+```
+
+3. Lalu comment pada bagian ini
+
+```
+// dnssec-validation auto;
+```
+
+4. Dan tambahkan
+
+```
+allow-query{any;};
+```
+
+5. Lakukan restart pada **Pochinki** dengan commadn berikut
+
+```
+service bind9 restart
+```
+
+6. Dengan cara yang sama, edit file menggunakan `nano /etc/bind/named.conf.options` pada server **Georgopol**
+
+7. Kemudian uncomment pada bagian ini dan tambahkan IP Erangel
+   
+```
+forwarders {
+      192.168.122.1; //IP Erangel
+};
+```
+
+8. Lalu comment pada bagian ini
+
+```
+// dnssec-validation auto;
+```
+
+9. Dan tambahkan
+
+```
+allow-query{any;};
+```
+
+10. Lakukan restart pada **Pochinki** dengan commadn berikut
+
+```
+service bind9 restart
+```
 
 **TESTING**
 
+Testing menggunakan command di bawah ini pada client **GatkaTrenches** dan **GatkaRadio**
+
+```
+ping google.com -c 5
+```
 
 **HASIL**
+
+- GatkaTrenches
+
+(GAMBAR)
+
+- GatkaRadio
 
 (GAMBAR)
 
@@ -680,12 +786,75 @@ Karena pusat ingin sebuah website yang ingin digunakan untuk memantau kondisi ma
 
 **CARA PENGERJAAN**
 
-1. 
+1. Pada server **Pochinki** dan **Georgopol** tambahkan IP Severny dengan ketik `nano /etc/resolv.conf`. Lalu tambahkan bagian ini:
+
+```
+nameserver 10.75.2.3    #IP Severny
+```
+
+2. Selanjutnya pada server client **GatkaTrenches** dan **GatkaRadio** jalankan script bash install-lynx.sh. Gunakan command `nano install-lynx.sh`, lalu masukkan kode bash di bawah ini.
+
+```bash
+#!/bin/bash
+
+# Update package lists
+apt-get update
+
+# Install lynx
+apt-get install lynx -y
+```
+3. Ketik command `install-lynx.sh` dan jalankan dengan `./install-lynx.sh`
+   
+4. Kemudian pada server **Severny** jalankan script bash severny.sh. Gunakan command `nano severny.sh`, lalu masukkan kode bash di bawah ini. Script bash ini berisi instalasi dan konfigurasi severny.
+
+```bash
+#!/bin/bash
+
+    # Melakukan instalasi apache2
+    apt-get update
+    apt-get install apache2 -y
+    apt-get install libapache2-mod-php7.0 -y
+
+    # Melakukan instalasi unzip
+    apt-get update
+    apt-get install unzip -y
+
+    # Melakukan instalasi php
+    apt-get update
+    apt-get install php -y
+
+# Download file lb.zip
+curl -L -o lb.zip --insecure "https://drive.google.com/uc?export=download&id=1xn03kTB27K872cokqwEIlk8Zb121HnfB"
+
+# Unzip file lb.zip
+unzip lb.zip
+
+# Hapus file template
+rm -rf /var/www/html/index.php
+
+# Copy file index.php
+cp worker/index.php /var/www/html/index.php
+
+service apache2 restart
+```
+
+5. Ketik command `chmod +x severny.sh` dan jalankan dengan `./severny.sh`
 
 **TESTING**
 
+Testing menggunakan command di bawah ini pada client **GatkaTrenches** dan **GatkaRadio**
+
+```
+lynx http://192.242.2.3/index.php
+```
 
 **HASIL**
+
+- GatkaTrenches
+
+(GAMBAR)
+
+- GatkaRadio
 
 (GAMBAR)
 
@@ -697,14 +866,101 @@ Tapi pusat merasa tidak puas dengan performanya karena traffic yang tinggi maka 
 
 **CARA PENGERJAAN**
 
-1. 
+1. Pada server **Pochinki** dan **Georgopol** tambahkan IP Mylta dengan ketik `nano /etc/resolv.conf`. Lalu tambahkan bagian ini:
+
+```
+nameserver 192.242.2.5    #IP Mylta
+```
+
+2. Kemudian pada server **Stalber** dan **Lipovka** jalankan script bash loadbalance.sh. Gunakan command `nano loadbalance.sh`, lalu masukkan kode bash di bawah ini. Script bash ini berisi instalasi dan konfigurasi load balancer.
+
+```bash
+#!/bin/bash
+
+    # Melakukan instalasi apache2
+    apt-get update
+    apt-get install apache2 -y
+    apt-get install libapache2-mod-php7.0 -y
+
+    # Melakukan instalasi unzip
+    apt-get update
+    apt-get install unzip -y
+
+    # Melakukan instalasi php
+    apt-get update
+    apt-get install php -y
+
+# Download file lb.zip
+curl -L -o lb.zip --insecure "https://drive.google.com/uc?export=download&id=1xn03kTB27K872cokqwEIlk8Zb121HnfB"
+
+# Unzip file lb.zip
+unzip lb.zip
+
+# Hapus file template
+rm -rf /var/www/html/index.php
+
+# Copy file index.php
+cp worker/index.php /var/www/html/index.php
+
+service apache2 restart
+```
+
+3. Ketik command `chmod +x loadbalance.sh` dan jalankan dengan `./loadbalance.sh`
+
+4. Kemudian pada server **Mylta** jalankan script bash loadbalancemylta.sh . Gunakan command `nano loadbalancemylta.sh`, lalu masukkan kode bash di bawah ini. Script bash ini berisi instalasi dan konfigurasi load balancer.
+
+```bash
+#!/bin/bash
+
+    # Melakukan instalasi apache2
+    apt-get update
+    apt-get install apache2 -y
+    apt-get install libapache2-mod-php7.0 -y
+
+    # Melakukan instalasi php
+    apt-get update
+    apt-get install php -y
+
+# Enable apache2 module
+a2enmod proxy_balancer
+a2enmod proxy_http
+a2enmod lbmethod_byrequests
+cat <<EOF > /etc/apache2/sites-available/000-default.conf
+<VirtualHost *:80>
+    <Proxy balancer://serverpool>
+        BalancerMember http://192.242.2.2/
+        BalancerMember http://192.242.2.3/
+        BalancerMember http://192.242.2.4/
+        Proxyset lbmethod=byrequests
+    </Proxy>
+    ProxyPass / balancer://serverpool/
+    ProxyPassReverse / balancer://serverpool/
+</VirtualHost>
+EOF
+
+service apache2 restart
+```
+
+5. Ketik command `chmod +x loadbalancemylta.sh` dan jalankan dengan `./loadbalancemylta.sh`
 
 **TESTING**
 
+Testing menggunakan command di bawah ini pada client **GatkaTrenches** dan **GatkaRadio**
+
+```
+lynx http://192.242.2.5/index.php
+```
 
 **HASIL**
 
+- GatkaTrenches
+
 (GAMBAR)
+
+- GatkaRadio
+
+(GAMBAR)
+
 
 ---
 
