@@ -21,7 +21,8 @@ Untuk membantu pertempuran di Erangel, kamu ditugaskan untuk membuat jaringan ko
 
 1. Membuat konfigurasi network pada setiap node sesuai dengan kerangka topologi 3
    
-    (GAMBAR)
+    ![soal1](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/67eaca30-7e49-4800-9d87-5e181c48de9f)
+
    
    - Konfigurasi di Node Erangel
      ```
@@ -131,7 +132,7 @@ ping google.com -c 5
 
 **HASIL**
 
-(GAMBAR)
+![soal1a](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/1d94a1f1-c94c-4ebb-a5ff-d5bfe088f373)
 
 ---
 
@@ -180,6 +181,7 @@ EOL
 
 service bind9 restart
 ```
+
 2. Setelah itu ketik `chmod +x soal2.sh` dan run dengan `./soal2.sh`
 
 ---
@@ -299,11 +301,13 @@ ping loot.it18.com -c 5
 
 - GatkaTrenches
 
-(GAMBAR)
+![soal5a](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/c18e68a8-ca89-49e6-b569-c99db3faf293)
+
 
 - GatkaRadio
 
-(GAMBAR)
+![soal5b](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/0fdbd527-8e4d-4248-b627-a54371da6c57)
+
 
 ---
 
@@ -351,7 +355,7 @@ service bind9 restart
 
 3. Setelah itu buka web console ke node client GatkaTrenches dan GatkaRadio, kemudian ketik command `nano /etc/resolv.conf`pada masing-masing node. Command nameserver Pochinki `192.242.1.2` dan Georgopol `192.242.1.2`, lalu tambahkan nameserver severny yaitu `192.242.2.3`
 
-(GAMBAR)
+![soal6a](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/0a4d3d97-bead-4eff-a143-c480ce6ca72b)
 
 **TESTING**
 
@@ -373,11 +377,12 @@ Jika memunculkan hasil ping, maka client sudah berhasil hanya bisa mengakses ser
 
 - GatkaTrenches
 
-(GAMBAR)
+![soal6b](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/1cade50c-33db-4921-b8ff-ca968e0999d7)
+
 
 - GatkaRadio
 
-(GAMBAR)
+![soal6c](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/43b88b5f-f3bd-42a9-b264-e9acd57212bd)
 
 ---
 
@@ -481,11 +486,13 @@ Jika berhasil menampilkan IP nya , maka berarti client bisa mengakses domain ter
 
 - GatkaTrenches
 
-(GAMBAR)
+![soal5a](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/5256ce39-ca78-4660-90c4-2d8e223f5d9a)
+
 
 - GatkaRadio
 
-(GAMBAR)
+![soal5b](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/6da85ec6-3fc8-45ef-87d5-787c7c5966d5)
+
 
 ---
 
@@ -533,11 +540,11 @@ ping medkit.airdrop.it18.com -c 5
 
 - GatkaTrenches
 
-(GAMBAR)
+![soal8b](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/03698d57-c1c2-4900-831b-b9a917356aa3)
 
 - GatkaRadio
 
-(GAMBAR)
+![soal8a](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/9cdd0a13-434a-4cbd-ba68-9ff8fb0c3e5c)
 
 ---
 
@@ -635,11 +642,13 @@ ping siren.redzone.it18.com -c 5
 
 - GatkaTrenches
 
-(GAMBAR)
+![soal9b](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/ddade1ce-9028-4e2a-bd2a-e6defe290468)
+
 
 - GatkaRadio
 
-(GAMBAR)
+![soal9a](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/7e96f1db-fc65-49ba-917f-9e356358b732)
+
 
 ---
 
@@ -690,11 +699,11 @@ ping www.log.siren.redzone.it18.com -c 5
 
 - GatkaTrenches
 
-(GAMBAR)
+![soal10a](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/b5d47efa-e12d-4a4b-b9c4-e6af1e2f2f35)
 
 - GatkaRadio
 
-(GAMBAR)
+![soal10b](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/0927d598-ac3d-4ae7-b0c5-f88ab62fba4a)
 
 ---
 
@@ -772,11 +781,11 @@ ping google.com -c 5
 
 - GatkaTrenches
 
-(GAMBAR)
+![soal11a](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/da78e396-b478-4d4d-b6f0-711b5da46451)
 
 - GatkaRadio
 
-(GAMBAR)
+![soal11b](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/ada82b5e-8a21-4d80-af90-330527263063)
 
 ---
 
@@ -852,11 +861,11 @@ lynx http://192.242.2.3/index.php
 
 - GatkaTrenches
 
-(GAMBAR)
+![soal12](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/39c9db92-66e5-467b-86ff-856f47349042)
 
 - GatkaRadio
 
-(GAMBAR)
+![soal12b](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/122e9381-6361-4d8d-b6c5-81292834cddd)
 
 ---
 
@@ -955,12 +964,11 @@ lynx http://192.242.2.5/index.php
 
 - GatkaTrenches
 
-(GAMBAR)
+![soal13a](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/8f3cd0a9-b26c-4645-a67c-1b4ad0d40a53)
 
 - GatkaRadio
 
-(GAMBAR)
-
+![soal13b](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/54267ec6-88b2-40aa-8dc9-922c524ae535)
 
 ---
 
