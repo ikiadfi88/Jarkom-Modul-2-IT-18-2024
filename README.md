@@ -1,4 +1,4 @@
-![image](https://github.com/ikiadfi88/Jarkom-Modul-2-IT-18-2024/assets/120791817/97d32664-1a6e-4bde-9260-3b9e024d952d)# **LAPORAN RESMI PRAKTIKUM KOMUNIKASI DATA & JARINGAN KOMPUTER MODUL 2**
+# **LAPORAN RESMI PRAKTIKUM KOMUNIKASI DATA & JARINGAN KOMPUTER MODUL 2**
 
 Berikut adalah Laporan Resmi Praktikum Komunikasi Data & Jaringan Komputer Modul 2 oleh Kelompok IT18.
 
